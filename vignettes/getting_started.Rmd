@@ -193,12 +193,35 @@ results <- list(
 For demonstration, we'll create mock results:
 
 ```{r mock_results}
-# Create mock results structure
+# Create mock results structure for multiple methods
+set.seed(42)
+mock_genes <- paste0("Gene", 1:100)
+
 results <- list(
   DESeq2 = list(
     method = "DESeq2",
     results = data.frame(
-      gene = rownames(counts)[1:100],
+      gene = mock_genes,
+      baseMean = runif(100, 50, 500),
+      log2FoldChange = rnorm(100, 0, 2),
+      pvalue = runif(100, 0, 0.1),
+      padj = runif(100, 0, 0.1)
+    )
+  ),
+  edgeR = list(
+    method = "edgeR",
+    results = data.frame(
+      gene = mock_genes,
+      baseMean = runif(100, 50, 500),
+      log2FoldChange = rnorm(100, 0, 2),
+      pvalue = runif(100, 0, 0.1),
+      padj = runif(100, 0, 0.1)
+    )
+  ),
+  `limma-voom` = list(
+    method = "limma-voom",
+    results = data.frame(
+      gene = mock_genes,
       baseMean = runif(100, 50, 500),
       log2FoldChange = rnorm(100, 0, 2),
       pvalue = runif(100, 0, 0.1),

@@ -30,5 +30,26 @@ A data.frame with consensus DE genes
 Creates a consensus list of DE genes based on agreement across methods.
 }
 \examples{
-# See vignette for complete example
+# Create mock results from 3 methods
+results_list <- list(
+  DESeq2 = list(results = data.frame(
+    gene = paste0("Gene", 1:100),
+    log2FoldChange = rnorm(100, 0, 2),
+    padj = runif(100)
+  )),
+  edgeR = list(results = data.frame(
+    gene = paste0("Gene", 1:100),
+    log2FoldChange = rnorm(100, 0, 2),
+    padj = runif(100)
+  )),
+  limma = list(results = data.frame(
+    gene = paste0("Gene", 1:100),
+    log2FoldChange = rnorm(100, 0, 2),
+    padj = runif(100)
+  ))
+)
+
+# Create consensus requiring 2+ methods
+consensus <- create_consensus_list(results_list, min_methods = 2)
+head(consensus)
 }

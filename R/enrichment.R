@@ -205,7 +205,20 @@ run_enrichment <- function(gene_list,
 #' @export
 #'
 #' @examples
-#' # See vignette for complete example
+#' # Create mock DE results
+#' de_results <- data.frame(
+#'   gene = paste0("Gene", 1:100),
+#'   log2FoldChange = rnorm(100, 0, 2),
+#'   padj = runif(100)
+#' )
+#' 
+#' \donttest{
+#' # Run enrichment on significant genes
+#' if (requireNamespace("org.Hs.eg.db", quietly = TRUE)) {
+#'   enrichment <- run_enrichment_from_de(de_results)
+#' }
+#' }
+#'
 run_enrichment_from_de <- function(de_results,
                                    padj_threshold = 0.05,
                                    lfc_threshold = 1,
@@ -268,7 +281,27 @@ run_enrichment_from_de <- function(de_results,
 #' @export
 #'
 #' @examples
-#' # See vignette for complete example
+#' # Create mock results
+#' results_list <- list(
+#'   DESeq2 = list(results = data.frame(
+#'     gene = paste0("Gene", 1:50),
+#'     log2FoldChange = rnorm(50, 0, 2),
+#'     padj = runif(50)
+#'   )),
+#'   edgeR = list(results = data.frame(
+#'     gene = paste0("Gene", 1:50),
+#'     log2FoldChange = rnorm(50, 0, 2),
+#'     padj = runif(50)
+#'   ))
+#' )
+#' 
+#' \donttest{
+#' # Compare enrichment across methods
+#' if (requireNamespace("org.Hs.eg.db", quietly = TRUE)) {
+#'   comparison <- compare_enrichment(results_list)
+#' }
+#' }
+#'
 compare_enrichment <- function(results_list,
                               padj_threshold = 0.05,
                               lfc_threshold = 1,

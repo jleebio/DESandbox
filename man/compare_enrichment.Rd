@@ -22,5 +22,25 @@ List of enrichment results for each method plus comparison
 Runs enrichment for each method and compares results.
 }
 \examples{
-# See vignette for complete example
+# Create mock results
+results_list <- list(
+  DESeq2 = list(results = data.frame(
+    gene = paste0("Gene", 1:50),
+    log2FoldChange = rnorm(50, 0, 2),
+    padj = runif(50)
+  )),
+  edgeR = list(results = data.frame(
+    gene = paste0("Gene", 1:50),
+    log2FoldChange = rnorm(50, 0, 2),
+    padj = runif(50)
+  ))
+)
+
+\donttest{
+# Compare enrichment across methods
+if (requireNamespace("org.Hs.eg.db", quietly = TRUE)) {
+  comparison <- compare_enrichment(results_list)
+}
+}
+
 }
