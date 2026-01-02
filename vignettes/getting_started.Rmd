@@ -1,0 +1,387 @@
+---
+title: "Getting Started with DESandbox"
+author: "DESandbox Contributors"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{Getting Started with DESandbox}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 5
+)
+```
+
+# Introduction
+
+DESandbox provides a unified interface for differential expression (DE) analysis
+using three popular methods: DESeq2, edgeR, and limma-voom. This vignette 
+demonstrates the complete workflow from data loading to enrichment analysis.
+
+## Installation
+
+```{r install, eval=FALSE}
+# Install from GitHub
+# devtools::install_github("yourusername/DESandbox")
+
+# Or install dependencies
+BiocManager::install(c("DESeq2", "edgeR", "limma", "airway"))
+```
+
+## Load Package
+
+```{r load}
+library(DESandbox)
+```
+
+# Example Dataset
+
+We'll use the airway dataset from Bioconductor - a real RNA-seq experiment studying 
+the effect of dexamethasone treatment on airway smooth muscle cells.
+
+```{r load_data, eval=TRUE}
+# Install airway dataset if needed
+# BiocManager::install("airway")
+
+library(airway)
+data(airway)
+
+# Extract counts and metadata
+counts <- assay(airway)
+metadata <- as.data.frame(colData(airway))
+
+# Prepare metadata
+metadata$condition <- metadata$dex
+rownames(metadata) <- metadata$Run
+
+# Filter low-count genes for demonstration
+counts <- counts[rowSums(counts) > 100, ]
+
+# Show data structure
+dim(counts)
+head(counts[, 1:4])
+head(metadata[, c("Run", "condition", "cell")])
+```
+
+The airway dataset contains:
+- **Genes**: ~64,000 genes (filtered to ~30,000 with sufficient counts)
+- **Samples**: 8 samples (4 control, 4 dexamethasone-treated)
+- **Design**: Paired samples from 4 cell lines
+
+For a faster demonstration with simulated data:
+
+```{r simulated_data}
+set.seed(42)
+
+# Create simulated count matrix
+n_genes <- 1000
+n_samples <- 12
+
+counts <- matrix(
+  rnbinom(n_genes * n_samples, mu = 100, size = 10),
+  nrow = n_genes,
+  ncol = n_samples
+)
+
+# Add differential expression to some genes
+de_genes <- 1:200
+counts[de_genes, 1:6] <- counts[de_genes, 1:6] * 3
+
+# Add gene names
+rownames(counts) <- paste0("Gene", 1:n_genes)
+colnames(counts) <- paste0("Sample", 1:n_samples)
+
+# Create metadata
+metadata <- data.frame(
+  sample = colnames(counts),
+  condition = factor(rep(c("control", "treatment"), each = 6)),
+  batch = factor(rep(c("A", "B"), times = 6))
+)
+rownames(metadata) <- metadata$sample
+
+head(counts[, 1:4])
+head(metadata)
+```
+
+# Basic Workflow
+
+## Step 1: Data Validation
+
+First, validate your count matrix and metadata:
+
+```{r validation}
+# Validate counts
+count_validation <- validate_counts(
+  counts,
+  min_counts = 10,
+  min_samples = 3
+)
+cat("Initial genes:", count_validation$n_genes, "\n")
+
+# Validate metadata
+meta_validation <- validate_metadata(
+  metadata,
+  condition_column = "condition"
+)
+print(meta_validation$conditions)
+```
+
+## Step 2: Create DESandbox Object
+
+Create a SummarizedExperiment object:
+
+```{r create_object2}
+dso <- create_desandbox_object(
+  counts = counts,
+  metadata = metadata,
+  condition_column = "condition"
+)
+
+print(dso)
+```
+
+## Step 3: Run Differential Expression Analysis
+
+### Run All Methods at Once
+
+```{r run_all, eval=FALSE}
+# Run all three methods
+results <- run_all_methods(dso)
+
+names(results)
+```
+
+### Or Run Methods Individually
+
+```{r run_individual, eval=FALSE}
+# DESeq2
+deseq2_results <- run_deseq2(
+  dso,
+  alpha = 0.05,
+  lfc_threshold = 0
+)
+
+# edgeR
+edger_results <- run_edger(
+  dso,
+  normalization = "TMM",
+  robust = TRUE
+)
+
+# limma-voom
+limma_results <- run_limma_voom(
+  dso,
+  normalization = "TMM"
+)
+
+# Combine into list
+results <- list(
+  DESeq2 = deseq2_results,
+  edgeR = edger_results,
+  `limma-voom` = limma_results
+)
+```
+
+For demonstration, we'll create mock results:
+
+```{r mock_results}
+# Create mock results structure
+results <- list(
+  DESeq2 = list(
+    method = "DESeq2",
+    results = data.frame(
+      gene = rownames(counts)[1:100],
+      baseMean = runif(100, 50, 500),
+      log2FoldChange = rnorm(100, 0, 2),
+      pvalue = runif(100, 0, 0.1),
+      padj = runif(100, 0, 0.1)
+    )
+  )
+)
+```
+
+## Step 4: Filter Results
+
+```{r filter}
+# Filter for significant genes
+sig_genes <- filter_results(
+  results$DESeq2$results,
+  padj_threshold = 0.05,
+  lfc_threshold = 1,
+  direction = "both"
+)
+
+head(sig_genes)
+```
+
+# Comparing Methods
+
+## Compare All Methods
+
+```{r compare, eval=FALSE}
+comparison <- compare_methods(
+  results,
+  padj_threshold = 0.05,
+  lfc_threshold = 1
+)
+
+# View summary statistics
+print(comparison$summary_stats)
+
+# View overlap matrix
+print(comparison$comparison_matrix)
+
+# View Jaccard similarity
+print(comparison$jaccard_matrix)
+
+# Consensus genes (found by all methods)
+print(head(comparison$consensus_genes))
+```
+
+## Compute Detailed Overlap
+
+```{r overlap, eval=FALSE}
+overlap <- compute_overlap(
+  results,
+  padj_threshold = 0.05,
+  lfc_threshold = 1
+)
+
+# View pairwise overlaps
+print(overlap$overlap_summary)
+```
+
+## Create Consensus Gene List
+
+```{r consensus, eval=FALSE}
+consensus <- create_consensus_list(
+  results,
+  min_methods = 2,
+  aggregate_lfc = "median"
+)
+
+head(consensus)
+```
+
+# Enrichment Analysis
+
+## Run GO and KEGG Enrichment
+
+```{r enrichment, eval=FALSE}
+# Run enrichment on significant genes
+enrichment <- run_enrichment_from_de(
+  results$DESeq2,
+  padj_threshold = 0.05,
+  lfc_threshold = 1,
+  gene_id_type = "SYMBOL",
+  organism = "human",
+  analysis_type = "both"
+)
+
+# View top GO terms
+head(enrichment$GO$summary)
+
+# View top KEGG pathways
+head(enrichment$KEGG$summary)
+```
+
+## Compare Enrichment Across Methods
+
+```{r compare_enrichment, eval=FALSE}
+enrichment_comparison <- compare_enrichment(
+  results,
+  organism = "human"
+)
+
+# View consensus pathways
+print(enrichment_comparison$pathway_overlap)
+```
+
+# Export and Caching
+
+## Export Results
+
+```{r export, eval=FALSE}
+# Export to multiple formats
+export_results(
+  results,
+  output_prefix = "my_analysis",
+  formats = c("csv", "tsv", "json", "rds")
+)
+```
+
+## Cache Analysis
+
+```{r cache, eval=FALSE}
+# Cache results for reproducibility
+cache_path <- cache_analysis(
+  results,
+  cache_dir = "./cache",
+  metadata = list(
+    project = "RNA-seq Analysis",
+    date = Sys.Date(),
+    organism = "human"
+  )
+)
+
+# Load cached results later
+cached_results <- load_cached_analysis(cache_path)
+
+# List available cache files
+cache_files <- list_cache_files("./cache")
+print(cache_files)
+```
+
+# Advanced Usage
+
+## Custom Contrasts
+
+```{r custom_contrast, eval=FALSE}
+# Specify custom contrast
+results_custom <- run_deseq2(
+  dso,
+  contrast = c("condition", "treatment", "control")
+)
+```
+
+## Parallel Processing
+
+```{r parallel, eval=FALSE}
+# Enable parallel processing
+library(BiocParallel)
+
+results_parallel <- run_deseq2(
+  dso,
+  parallel = TRUE
+)
+```
+
+## Direction-Specific Filtering
+
+```{r direction, eval=FALSE}
+# Only upregulated genes
+upregulated <- filter_results(
+  results$DESeq2$results,
+  direction = "up"
+)
+
+# Only downregulated genes
+downregulated <- filter_results(
+  results$DESeq2$results,
+  direction = "down"
+)
+```
+
+# Session Info
+
+```{r session_info}
+sessionInfo()
+```
