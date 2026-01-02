@@ -193,22 +193,17 @@ compute_volcano_stats <- function(results_df) {
 #' @importFrom ggrepel geom_text_repel
 #'
 #' @examples
-#' \dontrun{
-#' # Basic volcano plot
-#' p <- plot_volcano(results_df)
-#' print(p)
-#'
-#' # Customize thresholds and labeling
-#' p <- plot_volcano(
-#'   results_df,
-#'   log2FC_threshold = 1.5,
-#'   padj_threshold = 0.01,
-#'   label_top_n = 20
+#' # Create example DE results
+#' results_df <- data.frame(
+#'   gene_id = paste0("Gene", 1:100),
+#'   log2FC = rnorm(100, 0, 2),
+#'   padj = runif(100),
+#'   method = "DESeq2"
 #' )
-#'
-#' # Faceted by method
-#' p <- plot_volcano(results_df, facet_by_method = TRUE)
-#' }
+#' 
+#' # Basic volcano plot
+#' p <- plot_volcano(results_df, facet_by_method = FALSE, label_top_n = 5)
+#' print(p)
 plot_volcano <- function(results_df,
                         log2FC_threshold = 1,
                         padj_threshold = 0.05,
@@ -426,17 +421,18 @@ plot_volcano <- function(results_df,
 #' @importFrom ggforce geom_circle
 #'
 #' @examples
-#' \dontrun{
-#' # 3-way Venn diagram for all DE genes
-#' p <- plot_venn_de(results_df)
+#' # Create example results with multiple methods
+#' set.seed(123)
+#' results_df <- data.frame(
+#'   method = rep(c("DESeq2", "edgeR", "limma-voom"), each = 100),
+#'   gene_id = rep(paste0("Gene", 1:100), 3),
+#'   log2FC = rnorm(300, 0, 2),
+#'   padj = runif(300)
+#' )
+#' 
+#' # 3-way Venn diagram
+#' p <- plot_venn_de(results_df, log2FC_threshold = 0.5, padj_threshold = 0.1)
 #' print(p)
-#'
-#' # Venn diagram for upregulated genes only
-#' p <- plot_venn_de(results_df, direction = "up")
-#'
-#' # Get gene sets instead of plot
-#' gene_sets <- plot_venn_de(results_df, return_type = "sets")
-#' }
 plot_venn_de <- function(results_df,
                         log2FC_threshold = 1,
                         padj_threshold = 0.05,
@@ -785,10 +781,17 @@ create_venn_3way <- function(venn_data, colors, title, direction,
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' # Create example results
+#' results_df <- data.frame(
+#'   method = rep(c("DESeq2", "edgeR", "limma-voom"), each = 100),
+#'   gene_id = rep(paste0("Gene", 1:100), 3),
+#'   log2FC = rnorm(300, 0, 2),
+#'   padj = runif(300)
+#' )
+#' 
+#' # DE gene count comparison
 #' p <- plot_de_counts(results_df)
 #' print(p)
-#' }
 plot_de_counts <- function(results_df,
                           log2FC_threshold = 1,
                           padj_threshold = 0.05,

@@ -9,7 +9,20 @@
 #' @export
 #'
 #' @examples
-#' # See vignette for complete example
+#' # Create mock DE result
+#' de_result <- list(
+#'   method = "DESeq2",
+#'   results = data.frame(
+#'     gene = paste0("Gene", 1:10),
+#'     log2FoldChange = rnorm(10),
+#'     pvalue = runif(10),
+#'     padj = runif(10)
+#'   )
+#' )
+#' 
+#' # Standardize
+#' std_results <- standardize_results(de_result)
+#' head(std_results)
 standardize_results <- function(de_result, method = NULL) {
   
   if (is.null(method)) {
@@ -69,7 +82,16 @@ standardize_results <- function(de_result, method = NULL) {
 #' @export
 #'
 #' @examples
-#' # See vignette for complete example
+#' # Create example results
+#' results <- data.frame(
+#'   gene = paste0("Gene", 1:100),
+#'   log2FoldChange = rnorm(100, 0, 2),
+#'   padj = runif(100)
+#' )
+#' 
+#' # Filter for significant genes
+#' sig_genes <- filter_results(results, padj_threshold = 0.05, lfc_threshold = 1)
+#' nrow(sig_genes)
 filter_results <- function(results,
                           padj_threshold = 0.05,
                           lfc_threshold = 1,
@@ -134,7 +156,23 @@ filter_results <- function(results,
 #' @importFrom jsonlite toJSON
 #'
 #' @examples
-#' # See vignette for complete example
+#' # Create example results
+#' results <- data.frame(
+#'   gene = paste0("Gene", 1:10),
+#'   log2FoldChange = rnorm(10),
+#'   padj = runif(10)
+#' )
+#' 
+#' \donttest{
+#' # Export to CSV
+#' output_files <- export_results(
+#'   results, 
+#'   output_prefix = file.path(tempdir(), "de_results"),
+#'   formats = "csv"
+#' )
+#' print(output_files)
+#' }
+#'
 export_results <- function(results,
                           output_prefix,
                           formats = c("csv", "tsv", "json", "rds"),

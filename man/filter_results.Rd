@@ -30,5 +30,14 @@ A filtered data.frame
 Filters differential expression results based on thresholds.
 }
 \examples{
-# See vignette for complete example
+# Create example results
+results <- data.frame(
+  gene = paste0("Gene", 1:100),
+  log2FoldChange = rnorm(100, 0, 2),
+  padj = runif(100)
+)
+
+# Filter for significant genes
+sig_genes <- filter_results(results, padj_threshold = 0.05, lfc_threshold = 1)
+nrow(sig_genes)
 }

@@ -43,15 +43,16 @@ Generates Venn diagrams showing overlap of differentially expressed genes
 across multiple methods. Supports 2-way and 3-way comparisons.
 }
 \examples{
-\dontrun{
-# 3-way Venn diagram for all DE genes
-p <- plot_venn_de(results_df)
+# Create example results with multiple methods
+set.seed(123)
+results_df <- data.frame(
+  method = rep(c("DESeq2", "edgeR", "limma-voom"), each = 100),
+  gene_id = rep(paste0("Gene", 1:100), 3),
+  log2FC = rnorm(300, 0, 2),
+  padj = runif(300)
+)
+
+# 3-way Venn diagram
+p <- plot_venn_de(results_df, log2FC_threshold = 0.5, padj_threshold = 0.1)
 print(p)
-
-# Venn diagram for upregulated genes only
-p <- plot_venn_de(results_df, direction = "up")
-
-# Get gene sets instead of plot
-gene_sets <- plot_venn_de(results_df, return_type = "sets")
-}
 }

@@ -50,20 +50,15 @@ Generates publication-quality volcano plots showing log2 fold change
 vs. statistical significance. Points are colored by significance category.
 }
 \examples{
-\dontrun{
-# Basic volcano plot
-p <- plot_volcano(results_df)
-print(p)
-
-# Customize thresholds and labeling
-p <- plot_volcano(
-  results_df,
-  log2FC_threshold = 1.5,
-  padj_threshold = 0.01,
-  label_top_n = 20
+# Create example DE results
+results_df <- data.frame(
+  gene_id = paste0("Gene", 1:100),
+  log2FC = rnorm(100, 0, 2),
+  padj = runif(100),
+  method = "DESeq2"
 )
 
-# Faceted by method
-p <- plot_volcano(results_df, facet_by_method = TRUE)
-}
+# Basic volcano plot
+p <- plot_volcano(results_df, facet_by_method = FALSE, label_top_n = 5)
+print(p)
 }

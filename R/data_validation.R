@@ -206,6 +206,7 @@ validate_metadata <- function(metadata,
 #' @importFrom S4Vectors DataFrame
 #'
 #' @examples
+#' # Create example data
 #' counts <- matrix(rpois(1000, 10), nrow=100, ncol=10)
 #' colnames(counts) <- paste0("sample", 1:10)
 #' metadata <- data.frame(
@@ -213,7 +214,10 @@ validate_metadata <- function(metadata,
 #'   condition = rep(c("control", "treatment"), each=5)
 #' )
 #' rownames(metadata) <- metadata$sample
+#' 
+#' # Create DESandbox object
 #' dso <- create_desandbox_object(counts, metadata, "condition")
+#' print(dso)
 create_desandbox_object <- function(counts, 
                                    metadata, 
                                    condition_column = "condition",

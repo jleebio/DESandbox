@@ -20,5 +20,21 @@ A list containing comparison statistics and data
 Compares differential expression results from multiple methods.
 }
 \examples{
-# See vignette for complete example
+# Create mock results from multiple methods
+results_list <- list(
+  DESeq2 = list(results = data.frame(
+    gene = paste0("Gene", 1:100),
+    log2FoldChange = rnorm(100, 0, 2),
+    padj = runif(100)
+  )),
+  edgeR = list(results = data.frame(
+    gene = paste0("Gene", 1:100),
+    log2FoldChange = rnorm(100, 0, 2),
+    padj = runif(100)
+  ))
+)
+
+# Compare methods
+comparison <- compare_methods(results_list)
+print(comparison$summary)
 }

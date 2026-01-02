@@ -30,6 +30,7 @@ A SummarizedExperiment object
 Creates a standardized S4 object containing counts and metadata for DE analysis.
 }
 \examples{
+# Create example data
 counts <- matrix(rpois(1000, 10), nrow=100, ncol=10)
 colnames(counts) <- paste0("sample", 1:10)
 metadata <- data.frame(
@@ -37,5 +38,8 @@ metadata <- data.frame(
   condition = rep(c("control", "treatment"), each=5)
 )
 rownames(metadata) <- metadata$sample
+
+# Create DESandbox object
 dso <- create_desandbox_object(counts, metadata, "condition")
+print(dso)
 }

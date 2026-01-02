@@ -28,8 +28,15 @@ A ggplot2 object
 Generates a bar plot comparing the number of significant genes across methods.
 }
 \examples{
-\dontrun{
+# Create example results
+results_df <- data.frame(
+  method = rep(c("DESeq2", "edgeR", "limma-voom"), each = 100),
+  gene_id = rep(paste0("Gene", 1:100), 3),
+  log2FC = rnorm(300, 0, 2),
+  padj = runif(300)
+)
+
+# DE gene count comparison
 p <- plot_de_counts(results_df)
 print(p)
-}
 }

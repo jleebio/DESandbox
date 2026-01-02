@@ -27,5 +27,13 @@ Path to cached file
 Saves analysis results with metadata for reproducibility and faster reloading.
 }
 \examples{
-# See vignette for complete example
+# Create example results
+results <- list(method = "DESeq2", data = data.frame(gene = 1:10))
+
+\donttest{
+# Cache the results
+cache_path <- cache_analysis(results, cache_dir = tempdir())
+print(cache_path)
+}
+
 }

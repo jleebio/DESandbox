@@ -19,7 +19,21 @@
 #' @importFrom BiocParallel bpparam
 #'
 #' @examples
-#' # See vignette for complete example
+#' # Create example data
+#' counts <- matrix(rpois(1000, 10), nrow=100, ncol=10)
+#' colnames(counts) <- paste0("sample", 1:10)
+#' metadata <- data.frame(
+#'   sample = colnames(counts),
+#'   condition = factor(rep(c("control", "treatment"), each=5))
+#' )
+#' rownames(metadata) <- metadata$sample
+#' 
+#' # Create DESandbox object
+#' dso <- create_desandbox_object(counts, metadata, "condition")
+#' 
+#' # Run DESeq2
+#' results <- run_deseq2(dso)
+#' head(results$results)
 run_deseq2 <- function(desandbox_object,
                        design_formula = NULL,
                        covariates = NULL,
@@ -331,7 +345,19 @@ run_limma_voom <- function(desandbox_object,
 #' @export
 #'
 #' @examples
-#' # See vignette for complete example
+#' # Create example data
+#' counts <- matrix(rpois(1000, 10), nrow=100, ncol=10)
+#' colnames(counts) <- paste0("sample", 1:10)
+#' metadata <- data.frame(
+#'   sample = colnames(counts),
+#'   condition = factor(rep(c("control", "treatment"), each=5))
+#' )
+#' rownames(metadata) <- metadata$sample
+#' 
+#' # Create DESandbox object and run all methods
+#' dso <- create_desandbox_object(counts, metadata, "condition")
+#' results <- run_all_methods(dso)
+#' names(results)
 run_all_methods <- function(desandbox_object,
                            methods = c("DESeq2", "edgeR", "limma-voom"),
                            ...) {

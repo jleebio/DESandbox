@@ -24,5 +24,17 @@ A list containing results from all methods
 Convenience function to run DESeq2, edgeR, and limma-voom in parallel.
 }
 \examples{
-# See vignette for complete example
+# Create example data
+counts <- matrix(rpois(1000, 10), nrow=100, ncol=10)
+colnames(counts) <- paste0("sample", 1:10)
+metadata <- data.frame(
+  sample = colnames(counts),
+  condition = factor(rep(c("control", "treatment"), each=5))
+)
+rownames(metadata) <- metadata$sample
+
+# Create DESandbox object and run all methods
+dso <- create_desandbox_object(counts, metadata, "condition")
+results <- run_all_methods(dso)
+names(results)
 }

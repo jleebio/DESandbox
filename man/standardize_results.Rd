@@ -18,5 +18,18 @@ A standardized data.frame with consistent column names
 Converts results from different DE methods into a common format.
 }
 \examples{
-# See vignette for complete example
+# Create mock DE result
+de_result <- list(
+  method = "DESeq2",
+  results = data.frame(
+    gene = paste0("Gene", 1:10),
+    log2FoldChange = rnorm(10),
+    pvalue = runif(10),
+    padj = runif(10)
+  )
+)
+
+# Standardize
+std_results <- standardize_results(de_result)
+head(std_results)
 }

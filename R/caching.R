@@ -13,7 +13,15 @@
 #' @importFrom digest digest
 #'
 #' @examples
-#' # See vignette for complete example
+#' # Create example results
+#' results <- list(method = "DESeq2", data = data.frame(gene = 1:10))
+#' 
+#' \donttest{
+#' # Cache the results
+#' cache_path <- cache_analysis(results, cache_dir = tempdir())
+#' print(cache_path)
+#' }
+#'
 cache_analysis <- function(results,
                           cache_dir = "./desandbox_cache",
                           cache_name = NULL,
@@ -73,7 +81,17 @@ cache_analysis <- function(results,
 #' @export
 #'
 #' @examples
-#' # See vignette for complete example
+#' # Create and cache example results
+#' results <- list(method = "DESeq2", data = data.frame(gene = 1:10))
+#' 
+#' \donttest{
+#' cache_path <- cache_analysis(results, cache_dir = tempdir())
+#' 
+#' # Load cached results
+#' loaded_results <- load_cached_analysis(cache_path)
+#' print(loaded_results)
+#' }
+#'
 load_cached_analysis <- function(cache_path, check_version = TRUE) {
   
   if (!file.exists(cache_path)) {

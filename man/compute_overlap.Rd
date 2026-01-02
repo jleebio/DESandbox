@@ -27,5 +27,21 @@ A list containing overlap data and statistics
 Computes detailed overlap statistics and Venn diagram data.
 }
 \examples{
-# See vignette for complete example
+# Create mock results
+results_list <- list(
+  DESeq2 = list(results = data.frame(
+    gene = paste0("Gene", 1:100),
+    log2FoldChange = rnorm(100, 0, 2),
+    padj = runif(100)
+  )),
+  edgeR = list(results = data.frame(
+    gene = paste0("Gene", 1:100),
+    log2FoldChange = rnorm(100, 0, 2),
+    padj = runif(100)
+  ))
+)
+
+# Compute overlap
+overlap <- compute_overlap(results_list)
+print(overlap$summary)
 }

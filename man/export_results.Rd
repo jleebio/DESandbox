@@ -27,5 +27,21 @@ A list of output file paths
 Exports DE results to CSV, TSV, or JSON formats for downstream use.
 }
 \examples{
-# See vignette for complete example
+# Create example results
+results <- data.frame(
+  gene = paste0("Gene", 1:10),
+  log2FoldChange = rnorm(10),
+  padj = runif(10)
+)
+
+\donttest{
+# Export to CSV
+output_files <- export_results(
+  results, 
+  output_prefix = file.path(tempdir(), "de_results"),
+  formats = "csv"
+)
+print(output_files)
+}
+
 }

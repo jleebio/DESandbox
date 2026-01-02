@@ -18,5 +18,15 @@ The cached results object
 Loads previously cached analysis results.
 }
 \examples{
-# See vignette for complete example
+# Create and cache example results
+results <- list(method = "DESeq2", data = data.frame(gene = 1:10))
+
+\donttest{
+cache_path <- cache_analysis(results, cache_dir = tempdir())
+
+# Load cached results
+loaded_results <- load_cached_analysis(cache_path)
+print(loaded_results)
+}
+
 }

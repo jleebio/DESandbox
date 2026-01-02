@@ -10,10 +10,11 @@ Description: Provides a unified interface for running and comparing differential
     enables cross-method comparison, and integrates gene set enrichment analysis.
     Designed for reproducibility and API integration.
 License: MIT + file LICENSE
+URL: https://github.com/YOUR_USERNAME/DESandbox
+BugReports: https://github.com/YOUR_USERNAME/DESandbox/issues
 Encoding: UTF-8
-LazyData: true
 Depends: 
-    R (>= 4.1.0)
+    R (>= 4.4.0)
 Imports:
     DESeq2,
     edgeR,
@@ -41,4 +42,5 @@ Suggests:
 VignetteBuilder: knitr
 RoxygenNote: 7.3.3
 biocViews: GeneExpression, DifferentialExpression, RNASeq, Sequencing,
-    Transcriptomics, Normalization
+    Transcriptomics, Normalization, GeneSetEnrichment, Visualization,
+    MultipleComparison

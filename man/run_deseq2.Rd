@@ -39,5 +39,19 @@ A list containing DESeq2 results and metadata
 Performs differential expression analysis using DESeq2.
 }
 \examples{
-# See vignette for complete example
+# Create example data
+counts <- matrix(rpois(1000, 10), nrow=100, ncol=10)
+colnames(counts) <- paste0("sample", 1:10)
+metadata <- data.frame(
+  sample = colnames(counts),
+  condition = factor(rep(c("control", "treatment"), each=5))
+)
+rownames(metadata) <- metadata$sample
+
+# Create DESandbox object
+dso <- create_desandbox_object(counts, metadata, "condition")
+
+# Run DESeq2
+results <- run_deseq2(dso)
+head(results$results)
 }

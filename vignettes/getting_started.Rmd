@@ -152,7 +152,7 @@ print(dso)
 
 ### Run All Methods at Once
 
-```{r run_all, eval=FALSE}
+```{r run_all, eval=TRUE}
 # Run all three methods
 results <- run_all_methods(dso)
 
@@ -226,7 +226,7 @@ head(sig_genes)
 
 ## Compare All Methods
 
-```{r compare, eval=FALSE}
+```{r compare, eval=TRUE}
 comparison <- compare_methods(
   results,
   padj_threshold = 0.05,
@@ -248,7 +248,7 @@ print(head(comparison$consensus_genes))
 
 ## Compute Detailed Overlap
 
-```{r overlap, eval=FALSE}
+```{r overlap, eval=TRUE}
 overlap <- compute_overlap(
   results,
   padj_threshold = 0.05,
@@ -261,7 +261,7 @@ print(overlap$overlap_summary)
 
 ## Create Consensus Gene List
 
-```{r consensus, eval=FALSE}
+```{r consensus, eval=TRUE}
 consensus <- create_consensus_list(
   results,
   min_methods = 2,

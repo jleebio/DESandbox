@@ -10,7 +10,23 @@
 #' @export
 #'
 #' @examples
-#' # See vignette for complete example
+#' # Create mock results from multiple methods
+#' results_list <- list(
+#'   DESeq2 = list(results = data.frame(
+#'     gene = paste0("Gene", 1:100),
+#'     log2FoldChange = rnorm(100, 0, 2),
+#'     padj = runif(100)
+#'   )),
+#'   edgeR = list(results = data.frame(
+#'     gene = paste0("Gene", 1:100),
+#'     log2FoldChange = rnorm(100, 0, 2),
+#'     padj = runif(100)
+#'   ))
+#' )
+#' 
+#' # Compare methods
+#' comparison <- compare_methods(results_list)
+#' print(comparison$summary)
 compare_methods <- function(results_list,
                            padj_threshold = 0.05,
                            lfc_threshold = 1) {
@@ -143,7 +159,23 @@ compare_methods <- function(results_list,
 #' @export
 #'
 #' @examples
-#' # See vignette for complete example
+#' # Create mock results
+#' results_list <- list(
+#'   DESeq2 = list(results = data.frame(
+#'     gene = paste0("Gene", 1:100),
+#'     log2FoldChange = rnorm(100, 0, 2),
+#'     padj = runif(100)
+#'   )),
+#'   edgeR = list(results = data.frame(
+#'     gene = paste0("Gene", 1:100),
+#'     log2FoldChange = rnorm(100, 0, 2),
+#'     padj = runif(100)
+#'   ))
+#' )
+#' 
+#' # Compute overlap
+#' overlap <- compute_overlap(results_list)
+#' print(overlap$summary)
 compute_overlap <- function(results_list,
                            padj_threshold = 0.05,
                            lfc_threshold = 1,

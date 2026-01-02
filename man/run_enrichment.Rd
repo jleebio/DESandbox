@@ -45,5 +45,15 @@ A list containing enrichment results
 Performs GO and/or KEGG enrichment analysis on DE gene lists.
 }
 \examples{
-# See vignette for complete example
+\donttest{
+# Example gene list
+genes <- c("TP53", "BRCA1", "EGFR", "MYC", "PTEN")
+
+# Run GO enrichment (requires org.Hs.eg.db)
+if (requireNamespace("org.Hs.eg.db", quietly = TRUE)) {
+  results <- run_enrichment(genes, organism = "human", analysis_type = "GO")
+  print(results$GO)
+}
+}
+
 }
