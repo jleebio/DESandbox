@@ -1,2 +1,10 @@
-^.*\.Rproj$
-^\.Rproj\.user$
+*.Rproj
+.Rproj.user/
+
+# Ignore all Markdown except README.md
+*.md
+!README.md
+
+# Build artifacts and generated docs
+doc/
+Meta/
