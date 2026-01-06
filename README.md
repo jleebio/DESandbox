@@ -79,6 +79,36 @@ de2_std$gene_id <- de2_std$gene; de2_std$log2FC <- de2_std$log2FoldChange
 plot_volcano(de2_std, facet_by_method = FALSE)
 ```
 
+What you can learn from `comparison`:
+
+```r
+# 1) Per-method summary (counts of significant/up/down genes)
+comparison$summary_stats
+
+# 2) Consensus genes (significant in all methods)
+head(comparison$consensus_genes, 10)
+
+# 3) Method-specific genes (unique to each method)
+sapply(comparison$method_specific_genes, length)
+
+# 4) Pairwise agreement (Jaccard index 0–1)
+round(comparison$jaccard_matrix, 2)
+
+# 5) Visualize overlaps with a Venn diagram (2–3 methods)
+de2 <- standardize_results(results$DESeq2); de2$method <- "DESeq2"
+edg <- standardize_results(results$edgeR);  edg$method <- "edgeR"
+lim <- standardize_results(results$`limma-voom`); lim$method <- "limma-voom"
+
+# Adapt columns required by plot_venn_de
+adapt <- function(df) { df$gene_id <- df$gene; df$log2FC <- df$log2FoldChange; df }
+venn_df <- rbind(adapt(de2), adapt(edg), adapt(lim))
+
+p_venn <- plot_venn_de(venn_df, log2FC_threshold = 1, padj_threshold = 0.05,
+                       methods = c("DESeq2", "edgeR", "limma-voom"),
+                       title = "DE gene overlap (airway)")
+print(p_venn)
+```
+
 ## 🔗 Links
 
 - **Documentation**: See `vignettes/` folder (or use the quick start above)
