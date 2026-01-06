@@ -18,3 +18,5 @@
 ^docs$
 ^\.vscode$
 ^\.idea$
+^doc$
+^Meta$
