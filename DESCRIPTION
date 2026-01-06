@@ -3,7 +3,7 @@ Type: Package
 Title: Unified Interface for Differential Expression Analysis
 Version: 0.99.0
 Authors@R: c(
-    person("Your", "Name", email = "your.email@example.com", role = c("aut", "cre"))
+    person("Jeongah", "Lee", email = "jeongahblair@gmail.com", role = c("aut", "cre"))
     )
 Description: Provides a unified interface for running and comparing differential 
     expression analyses using DESeq2, edgeR, and limma-voom. Standardizes outputs,
