@@ -1,9 +1,9 @@
 *.Rproj
 .Rproj.user/
 
-# Ignore all Markdown except README.md
+# Ignore all Markdown except root README.md
 *.md
-!README.md
+!/README.md
 
 # Build artifacts and generated docs
 doc/
