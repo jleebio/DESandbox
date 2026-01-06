@@ -2,7 +2,7 @@
 
 **Unified Differential Expression Analysis in R**
 
-<img src="https://github.com/jleebio/DESandbox/blob/main/DESandbox_logo.png" width="200">
+<img src="https://github.com/jleebio/DESandbox/blob/main/resources/logo_desandbox.png" width="200">
 Compare DESeq2, edgeR, and limma-voom results with one simple interface.
 
 ## ✨ Why DESandbox?
